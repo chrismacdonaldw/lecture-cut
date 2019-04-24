@@ -1,6 +1,6 @@
 import subprocess
-import pydub
 from pydub import AudioSegment
+from pydub.silence import detect_silence
 
 def extract_audio():
     filename = input("Enter filename: ")
@@ -10,11 +10,11 @@ def extract_audio():
 
 def analyze_audio():
     audio = AudioSegment.from_wav("cut.wav")
-    audio_chunks = pydub.silence.split_on_silence(audio, silence_thresh=-50)
-    print("Chunks generated: ", audio_chunks)
+    return detect_silence(audio, silence_thresh = -50)
 
-def get_chunk_lengths():
-    print("default")
+def get_chunk_lengths(audio_chunks):
+      for chunk in audio_chunks:
+          print(chunk)
 
 extract_audio()
-analyze_audio()
+get_chunk_lengths(analyze_audio())
