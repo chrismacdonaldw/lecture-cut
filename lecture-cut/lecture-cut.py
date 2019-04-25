@@ -1,5 +1,6 @@
 import subprocess
 import os
+import argparse
 from pydub import AudioSegment
 from pydub.silence import detect_silence
 
@@ -12,24 +13,34 @@ def extract_audio():
 
 def analyze_audio():
     audio = AudioSegment.from_wav("cut.wav")
-    return detect_silence(audio, silence_thresh = -55)
+    return detect_silence(audio, silence_thresh = SILENCE_THRESHOLD)
 
 def generate_command(silence, filename):
     videocmd = "ffmpeg -i " + filename + " -vf \"select='not("
-    setadd = ""
+    addcmd = ""
     for i, chunk in enumerate(silence):
         if i == 0:
-            setadd += 'between(t,%s,%s)' % ((chunk[0] + 150)/1000, (chunk[1] - 150)/1000)
+            addcmd += 'between(t,%s,%s)' % ((chunk[0] + CUT_INTERVAL)/1000, (chunk[1] - CUT_INTERVAL)/1000)
         else:
-            setadd += '+between(t,%s,%s)' % ((chunk[0] + 150)/1000, (chunk[1] - 150)/1000)
+            addcmd += '+between(t,%s,%s)' % ((chunk[0] + CUT_INTERVAL)/1000, (chunk[1] - CUT_INTERVAL)/1000)
     
-    videocmd += setadd
-    videocmd += ")',setpts=N/FRAME_RATE/TB\" -af \"aselect='not("
-    videocmd += setadd
-    videocmd += ")',asetpts=N/SR/TB\" out.mp4"
-    print(videocmd)
+    videocmd = videocmd + '%s%s%s%s' % (
+        addcmd,
+        COMMAND_SET_ONE,
+        addcmd,
+        COMMAND_SET_TWO
+    )
     subprocess.call(videocmd, shell=True)
 
+parser = argparse.ArgumentParser(description='Trims video based on segments which are under a specified silence threshold')
+parser.add_argument('--cut_interval', type=int, default=150, help='ms of silent audio segments to be cut to allow for a custom margin of error, default is 150')
+parser.add_argument('--silence_threshold', type=int, default=-55, help='value in dBFS that when audio is lower then, will be considered silent. Default is -55')
+args = parser.parse_args()
+
+CUT_INTERVAL = args.cut_interval
+SILENCE_THRESHOLD = args.silence_threshold
+COMMAND_SET_ONE = ")',setpts=N/FRAME_RATE/TB\" -af \"aselect='not("
+COMMAND_SET_TWO = ")',asetpts=N/SR/TB\" out.mp4"
 
 filename = extract_audio()
 generate_command(analyze_audio(), filename)
