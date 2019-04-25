@@ -24,7 +24,7 @@ def generate_command(silence, filename):
         else:
             addcmd += '+between(t,%s,%s)' % ((chunk[0] + CUT_INTERVAL)/1000, (chunk[1] - CUT_INTERVAL)/1000)
     
-    videocmd = videocmd + '%s%s%s%s%s' % (
+    videocmd += '%s%s%s%s%s' % (
         addcmd,
         COMMAND_SET_ONE,
         addcmd,
