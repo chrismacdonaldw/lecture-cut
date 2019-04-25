@@ -29,7 +29,7 @@ def analyze_audio():
 
 def generate_command(silence, filename):
     """
-    Generates FFMPEG Command to trim video
+    Generates FFmpeg Command to trim video
     using the aforementioned time intervals
 
     Args:
