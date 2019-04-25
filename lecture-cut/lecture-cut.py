@@ -5,6 +5,12 @@ from pydub import AudioSegment
 from pydub.silence import detect_silence
 
 def extract_audio():
+    """
+    Extracts audio from video file
+
+    Returns:
+        Returns filename for future use
+    """
     filename = input("Enter filename: ")
 
     command = "ffmpeg -i " + filename + " -ab 160k -ac 2 -ar 44100 -vn cut.wav"
@@ -12,10 +18,24 @@ def extract_audio():
     return filename
 
 def analyze_audio():
+    """
+    Finds silent chunks of audio
+
+    Returns:
+        Time intervals of silence
+    """
     audio = AudioSegment.from_wav("cut.wav")
     return detect_silence(audio, silence_thresh = SILENCE_THRESHOLD)
 
 def generate_command(silence, filename):
+    """
+    Generates FFMPEG Command to trim video
+    using the aforementioned time intervals
+
+    Args:
+        silence: Intervals of silent audio
+        filename: Filename given in extract_audio
+    """
     videocmd = "ffmpeg -i " + filename + " -vf \"select='not("
     addcmd = ""
     for i, chunk in enumerate(silence):
