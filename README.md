@@ -8,8 +8,9 @@ lecture-cut is a personal project meant to hasten videos by trimming them based 
 
 --silence_threshold, type=int, default=-55, help='value in dBFS that when audio is lower then, will be considered silent. Default is -55'
 
-## Warning
-This program uses FFmpeg, meaning if you don't have it installed as a proper environment variable it won't work.
+## Requirements
+- [FFmpeg](https://github.com/FFmpeg/FFmpeg)
+- [Python3](https://www.python.org/downloads/)
 
 ## Credit
  - [PyDub](https://github.com/jiaaro/pydub/blob/master/README.markdown)
