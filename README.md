@@ -13,6 +13,4 @@ lecture-cut is a personal project meant to hasten videos by trimming them based 
 - [Python3](https://www.python.org/downloads/)
 
 ## Credit
- - [PyDub](https://github.com/jiaaro/pydub/blob/master/README.markdown)
-
- PyDub made this entire thing a whole lot easier.
+ - [PyDub](https://github.com/jiaaro/pydub/blob/master/README.markdown
